@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "serve": "vite preview",
     "build": "vite build --base=/assets/mail/frontend/ && yarn copy-html-entry",
     "copy-html-entry": "cp ../mail/public/frontend/index.html ../mail/www/mail.html"
