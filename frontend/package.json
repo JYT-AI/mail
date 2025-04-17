@@ -10,6 +10,7 @@
     "copy-html-entry": "cp ../mail/public/frontend/index.html ../mail/www/mail.html"
   },
   "dependencies": {
+    "@iframe-resizer/vue": "5.4.4",
     "@vueuse/core": "^10.4.1",
     "dayjs": "^1.11.11",
     "frappe-ui": "^0.1.108",
