@@ -61,6 +61,7 @@ export default defineConfig({
 			'engine.io-client',
 			'prosemirror-state',
 			'prosemirror-view',
+			'highlight.js/lib/core',
 		],
 	},
 })
