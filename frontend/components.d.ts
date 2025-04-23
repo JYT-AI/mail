@@ -34,7 +34,6 @@ declare module 'vue' {
     LinkControl: typeof import('./src/components/Controls/LinkControl.vue')['default']
     LoginLayout: typeof import('./src/components/LoginLayout.vue')['default']
     MailAccountModal: typeof import('./src/components/Modals/MailAccountModal.vue')['default']
-    MailAccountSettings: typeof import('./src/components/Settings/AccountSettings.vue')['default']
     MailDate: typeof import('./src/components/MailDate.vue')['default']
     MailDetailsPopover: typeof import('./src/components/MailDetailsPopover.vue')['default']
     MailLogo: typeof import('./src/components/Icons/MailLogo.vue')['default']
@@ -52,6 +51,5 @@ declare module 'vue' {
     SidebarDetail: typeof import('./src/components/SidebarDetail.vue')['default']
     SidebarLink: typeof import('./src/components/SidebarLink.vue')['default']
     UserDropdown: typeof import('./src/components/UserDropdown.vue')['default']
-    UserSettings: typeof import('./src/components/Settings/ProfileSettings.vue')['default']
   }
 }
