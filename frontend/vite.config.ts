@@ -10,7 +10,38 @@ export default defineConfig({
 		__VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
 	},
 	plugins: [
-		frappeui(),
+		frappeui({
+			frappeProxy: true,
+			lucideIcons: true,
+			jinjaBootData: true,
+			frappeTypes: {
+				input: {
+					mail: [
+						'outgoing_mail',
+						'incoming_mail',
+						'mail_tenant',
+						'mail_tenant_member',
+						'mail_domain',
+						'mail_domain_request',
+						'mail_alias',
+						'mail_group',
+						'mail_group_member',
+						'mail_account',
+						'mail_account_request',
+						'mail_contact',
+						'mail_recipient',
+						'mail_settings',
+					],
+				},
+			},
+			buildConfig: {
+				outDir: '../mail/public/frontend',
+				baseUrl: '/assets/mail/frontend/',
+				indexHtmlPath: '../mail/www/mail.html',
+				emptyOutDir: true,
+				sourcemap: true,
+			},
+		}),
 		vue({
 			script: {
 				defineModel: true,
@@ -23,22 +54,6 @@ export default defineConfig({
 			'@': path.resolve(__dirname, 'src'),
 		},
 	},
-	build: {
-		outDir: `../mail/public/frontend`,
-		emptyOutDir: true,
-		commonjsOptions: {
-			include: [/tailwind.config.js/, /node_modules/],
-		},
-		sourcemap: true,
-		target: 'es2015',
-		rollupOptions: {
-			output: {
-				manualChunks: {
-					'frappe-ui': ['frappe-ui'],
-				},
-			},
-		},
-	},
 	optimizeDeps: {
 		include: [
 			'frappe-ui > feather-icons',
@@ -46,6 +61,7 @@ export default defineConfig({
 			'engine.io-client',
 			'prosemirror-state',
 			'prosemirror-view',
+			'highlight.js/lib/core',
 		],
 	},
 })
