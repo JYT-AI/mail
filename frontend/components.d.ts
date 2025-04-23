@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AccountSettings: typeof import('./src/components/Settings/AccountSettings.vue')['default']
     AddAliasModal: typeof import('./src/components/Modals/AddAliasModal.vue')['default']
     AddDomainModal: typeof import('./src/components/Modals/AddDomainModal.vue')['default']
     AddGroupMemberInput: typeof import('./src/components/AddGroupMemberInput.vue')['default']
@@ -33,7 +34,7 @@ declare module 'vue' {
     LinkControl: typeof import('./src/components/Controls/LinkControl.vue')['default']
     LoginLayout: typeof import('./src/components/LoginLayout.vue')['default']
     MailAccountModal: typeof import('./src/components/Modals/MailAccountModal.vue')['default']
-    MailAccountSettings: typeof import('./src/components/Settings/MailAccountSettings.vue')['default']
+    MailAccountSettings: typeof import('./src/components/Settings/AccountSettings.vue')['default']
     MailDate: typeof import('./src/components/MailDate.vue')['default']
     MailDetailsPopover: typeof import('./src/components/MailDetailsPopover.vue')['default']
     MailLogo: typeof import('./src/components/Icons/MailLogo.vue')['default']
@@ -42,6 +43,7 @@ declare module 'vue' {
     MobileLayout: typeof import('./src/components/MobileLayout.vue')['default']
     MultiselectInputControl: typeof import('./src/components/Controls/MultiselectInputControl.vue')['default']
     NoMails: typeof import('./src/components/Icons/NoMails.vue')['default']
+    ProfileSettings: typeof import('./src/components/Settings/ProfileSettings.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SendMail: typeof import('./src/components/SendMail.vue')['default']
@@ -50,6 +52,6 @@ declare module 'vue' {
     SidebarDetail: typeof import('./src/components/SidebarDetail.vue')['default']
     SidebarLink: typeof import('./src/components/SidebarLink.vue')['default']
     UserDropdown: typeof import('./src/components/UserDropdown.vue')['default']
-    UserSettings: typeof import('./src/components/Settings/UserSettings.vue')['default']
+    UserSettings: typeof import('./src/components/Settings/ProfileSettings.vue')['default']
   }
 }
