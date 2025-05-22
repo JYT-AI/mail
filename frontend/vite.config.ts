@@ -17,8 +17,7 @@ export default defineConfig({
 			frappeTypes: {
 				input: {
 					mail: [
-						'outgoing_mail',
-						'incoming_mail',
+						'email_message',
 						'mail_tenant',
 						'mail_tenant_member',
 						'mail_domain',
