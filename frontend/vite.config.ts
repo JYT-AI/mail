@@ -16,6 +16,7 @@ export default defineConfig({
 			jinjaBootData: true,
 			frappeTypes: {
 				input: {
+					frappe: ['file'],
 					mail: [
 						'email_message',
 						'mail_tenant',
