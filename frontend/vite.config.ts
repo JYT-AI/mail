@@ -16,16 +16,16 @@ export default defineConfig({
 			jinjaBootData: true,
 			frappeTypes: {
 				input: {
+					frappe: ['file'],
 					mail: [
-						'outgoing_mail',
-						'incoming_mail',
+						'email_message',
 						'mail_tenant',
 						'mail_tenant_member',
 						'mail_domain',
 						'mail_domain_request',
 						'mail_alias',
-						'mail_group',
-						'mail_group_member',
+						'mailing_list',
+						'mailing_list_member',
 						'mail_account',
 						'mail_account_request',
 						'mail_contact',
