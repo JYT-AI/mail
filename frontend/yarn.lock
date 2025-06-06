@@ -501,6 +501,11 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-code-block/-/extension-code-block-2.11.7.tgz#1aaaadd231317a0e1277aa987854a077cb83f0f7"
   integrity sha512-To/y/2H04VWqiANy53aXjV7S6fA86c2759RsH1hTIe57jA1KyE7I5tlAofljOLZK/covkGmPeBddSPHGJbz++Q==
 
+"@tiptap/extension-code-block@^2.11.9":
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-code-block/-/extension-code-block-2.13.0.tgz#8c7cf37baefdca16896584cd7ba951673e480488"
+  integrity sha512-HGcWmwKx4D53HY4XO0ve6lNHirpWdd91AVGVPuIkyG0wSvAzBgXy4TIgyUrHxGRE4qvNAe685RCYIA/VMBJAyg==
+
 "@tiptap/extension-code@^2.11.7":
   version "2.11.7"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-code/-/extension-code-2.11.7.tgz#d9cb080992080d3a576482d8beee280d29d8a9df"
@@ -542,6 +547,11 @@
   version "2.11.7"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-heading/-/extension-heading-2.11.7.tgz#0e29db2a5dcd3456c7ab1a40817b56b926a073ec"
   integrity sha512-8kWh7y4Rd2fwxfWOhFFWncHdkDkMC1Z60yzIZWjIu72+6yQxvo8w3yeb7LI7jER4kffbMmadgcfhCHC/fkObBA==
+
+"@tiptap/extension-heading@^2.12.0":
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-heading/-/extension-heading-2.13.0.tgz#5e75f555b207de50fa1108df27df5c761f1c58fd"
+  integrity sha512-85G/DrrywpMQtZYwZJFwR+2ocRdvUM3FMLO4JVIZA7DyFsMD59lAixSSdBC2yZyr2Y8uzMW/UYyJdE+gpO6k7A==
 
 "@tiptap/extension-highlight@^2.0.3":
   version "2.11.7"
@@ -1204,6 +1214,14 @@ eastasianwidth@^0.2.0:
   resolved "https://registry.yarnpkg.com/eastasianwidth/-/eastasianwidth-0.2.0.tgz#696ce2ec0aa0e6ea93a397ffcf24aa7840c827cb"
   integrity sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==
 
+echarts@^5.6.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/echarts/-/echarts-5.6.0.tgz#2377874dca9fb50f104051c3553544752da3c9d6"
+  integrity sha512-oTbVTsXfKuEhxftHqL5xprgLoc0k7uScAwtryCgWF6hPYFLRwOUHiFmHGCBKP5NPFNkDVopOieyUqYGH8Fa3kA==
+  dependencies:
+    tslib "2.3.0"
+    zrender "5.6.1"
+
 electron-to-chromium@^1.5.73:
   version "1.5.139"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.139.tgz#56ae7d42439e2967a54badbadaeb12f748987f37"
@@ -1345,17 +1363,21 @@ fraction.js@^4.3.7:
   resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.3.7.tgz#06ca0085157e42fda7f9e726e79fefc4068840f7"
   integrity sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==
 
-frappe-ui@0.1.127:
-  version "0.1.127"
-  resolved "https://registry.yarnpkg.com/frappe-ui/-/frappe-ui-0.1.127.tgz#e2dcd8c1da192dd8d6b7915aea4e63eab58dae3d"
-  integrity sha512-i7JcxWbTv8ftKeyywzZvB8vcZK4EW7MbnyfYKyvgml8adOz1bnA+bxUkeKpj6X5M0yOv73THyvkwBx+HawVLYg==
+frappe-ui@0.1.151:
+  version "0.1.151"
+  resolved "https://registry.yarnpkg.com/frappe-ui/-/frappe-ui-0.1.151.tgz#fe8460f46b6dc7bb253c6e6809897947578579dc"
+  integrity sha512-UxcJdYJCqzyUM7iXKnrok4vcXm2Tp9jht1jHPo6/RNrJUhMK3j9HIl2doGO22QDDKr75z136pFg0q46guNujrQ==
   dependencies:
+    "@floating-ui/vue" "^1.1.6"
     "@headlessui/vue" "^1.7.14"
     "@popperjs/core" "^2.11.2"
     "@tailwindcss/forms" "^0.5.3"
     "@tailwindcss/typography" "^0.5.16"
+    "@tiptap/core" "^2.11.7"
+    "@tiptap/extension-code-block" "^2.11.9"
     "@tiptap/extension-code-block-lowlight" "^2.11.5"
     "@tiptap/extension-color" "^2.0.3"
+    "@tiptap/extension-heading" "^2.12.0"
     "@tiptap/extension-highlight" "^2.0.3"
     "@tiptap/extension-image" "^2.0.3"
     "@tiptap/extension-link" "^2.0.3"
@@ -1374,12 +1396,16 @@ frappe-ui@0.1.127:
     "@tiptap/vue-3" "^2.0.3"
     "@vueuse/core" "^10.4.1"
     dayjs "^1.11.13"
+    echarts "^5.6.0"
     feather-icons "^4.28.0"
     idb-keyval "^6.2.0"
     lowlight "^3.3.0"
     lucide-static "^0.479.0"
     ora "5.4.1"
     prettier "^3.3.2"
+    prosemirror-model "^1.25.1"
+    prosemirror-state "^1.4.3"
+    prosemirror-view "^1.39.2"
     radix-vue "^1.5.3"
     reka-ui "^2.0.2"
     showdown "^2.1.0"
@@ -2011,6 +2037,13 @@ prosemirror-model@^1.0.0, prosemirror-model@^1.20.0, prosemirror-model@^1.21.0, 
   dependencies:
     orderedmap "^2.0.0"
 
+prosemirror-model@^1.25.1:
+  version "1.25.1"
+  resolved "https://registry.yarnpkg.com/prosemirror-model/-/prosemirror-model-1.25.1.tgz#aeae9f1ec79fcaa76f6fc619800d91fbcf726870"
+  integrity sha512-AUvbm7qqmpZa5d9fPKMvH1Q5bqYQvAZWOGRvxsB6iFLyycvC9MwNemNVjHVrWgjaoxAfY8XVg7DbvQ/qxvI9Eg==
+  dependencies:
+    orderedmap "^2.0.0"
+
 prosemirror-schema-basic@^1.2.3:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/prosemirror-schema-basic/-/prosemirror-schema-basic-1.2.4.tgz#389ce1ec09b8a30ea9bbb92c58569cb690c2d695"
@@ -2066,6 +2099,15 @@ prosemirror-view@^1.0.0, prosemirror-view@^1.1.0, prosemirror-view@^1.27.0, pros
   version "1.39.1"
   resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.39.1.tgz#9e24cc82649d37ed5d75bf59419694b0566927bb"
   integrity sha512-GhLxH1xwnqa5VjhJ29LfcQITNDp+f1jzmMPXQfGW9oNrF0lfjPzKvV5y/bjIQkyKpwCX3Fp+GA4dBpMMk8g+ZQ==
+  dependencies:
+    prosemirror-model "^1.20.0"
+    prosemirror-state "^1.0.0"
+    prosemirror-transform "^1.1.0"
+
+prosemirror-view@^1.39.2:
+  version "1.40.0"
+  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.40.0.tgz#212e627a0c4f0198ac9823a1232e0099c9a92865"
+  integrity sha512-2G3svX0Cr1sJjkD/DYWSe3cfV5VPVTBOxI9XQEGWJDFEpsZb/gh4MV29ctv+OJx2RFX4BLt09i+6zaGM/ldkCw==
   dependencies:
     prosemirror-model "^1.20.0"
     prosemirror-state "^1.0.0"
@@ -2401,6 +2443,11 @@ ts-interface-checker@^0.1.9:
   resolved "https://registry.yarnpkg.com/ts-interface-checker/-/ts-interface-checker-0.1.13.tgz#784fd3d679722bc103b1b4b8030bcddb5db2a699"
   integrity sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==
 
+tslib@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.0.tgz#803b8cdab3e12ba581a4ca41c8839bbb0dacb09e"
+  integrity sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==
+
 tslib@^2.0.0, tslib@^2.8.0:
   version "2.8.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
@@ -2571,3 +2618,10 @@ yaml@^2.3.4:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.7.1.tgz#44a247d1b88523855679ac7fa7cda6ed7e135cf6"
   integrity sha512-10ULxpnOCQXxJvBgxsn9ptjq6uviG/htZKk9veJGhlqn3w/DxQ631zFF+nlQXLwmImeS5amR2dl2U8sg6U9jsQ==
+
+zrender@5.6.1:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/zrender/-/zrender-5.6.1.tgz#e08d57ecf4acac708c4fcb7481eb201df7f10a6b"
+  integrity sha512-OFXkDJKcrlx5su2XbzJvj/34Q3m6PvyCZkVPHGYpcCJ52ek4U/ymZyfuV1nKE23AyBJ51E/6Yr0mhZ7xGTO4ag==
+  dependencies:
+    tslib "2.3.0"
