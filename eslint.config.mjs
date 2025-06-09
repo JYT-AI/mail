@@ -171,7 +171,7 @@ export default config(
               position: 'after',
             },
             {
-              pattern: 'frappe-ui/src/data-fetching',
+              pattern: 'frappe-ui/src/**',
               group: 'external',
               position: 'after',
             },
