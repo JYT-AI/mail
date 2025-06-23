@@ -46,6 +46,7 @@ declare module 'vue' {
     ProfileSettings: typeof import('./src/components/Settings/ProfileSettings.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SearchModal: typeof import('./src/components/Modals/SearchModal.vue')['default']
     SendMail: typeof import('./src/components/SendMail.vue')['default']
     SendMailMobileLayout: typeof import('./src/components/SendMailMobileLayout.vue')['default']
     SettingsModal: typeof import('./src/components/Modals/SettingsModal.vue')['default']
