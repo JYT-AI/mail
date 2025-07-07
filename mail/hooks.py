@@ -8,9 +8,9 @@ app_license = "agpl-3.0"
 
 
 website_redirects = [
-	{"source": "/", "target": "/mail"},
-	{"source": "/login", "target": "/mail/login"},
-	{"source": "/signup", "target": "/mail/signup"},
+	#{"source": "/", "target": "/mail"},
+	#{"source": "/login", "target": "/mail/login"},
+	#{"source": "/signup", "target": "/mail/signup"},
 	{
 		"source": "/auth/validate",
 		"target": "/api/method/mail.api.auth.validate",
