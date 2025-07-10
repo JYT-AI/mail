@@ -61,7 +61,7 @@ export default defineConfig({
 			manifest: {
 				display: 'standalone',
 				name: 'Frappe Mail',
-				short_name: 'Mail',
+				short_name: 'Frappe Mail',
 				start_url: '/mail',
 				description: 'Modern email client powered by Frappe',
 				icons: [
