@@ -54,5 +54,6 @@ declare module 'vue' {
     SettingsModal: typeof import('./src/components/Modals/SettingsModal.vue')['default']
     SidebarLink: typeof import('./src/components/SidebarLink.vue')['default']
     UserDropdown: typeof import('./src/components/UserDropdown.vue')['default']
+    VacationResponseSettings: typeof import('./src/components/Settings/VacationResponseSettings.vue')['default']
   }
 }
