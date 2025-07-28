@@ -28,6 +28,7 @@ declare module 'vue' {
     EditAliasModal: typeof import('./src/components/Modals/EditAliasModal.vue')['default']
     EditInviteModal: typeof import('./src/components/Modals/EditInviteModal.vue')['default']
     EditPhotoModal: typeof import('./src/components/Modals/EditPhotoModal.vue')['default']
+    EmailContent: typeof import('./src/components/EmailContent.vue')['default']
     EmojiPicker: typeof import('./src/components/EmojiPicker.vue')['default']
     EmptyLayout: typeof import('./src/components/EmptyLayout.vue')['default']
     FrappeLogo: typeof import('./src/components/Icons/FrappeLogo.vue')['default']
