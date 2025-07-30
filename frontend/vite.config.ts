@@ -103,7 +103,7 @@ export default defineConfig({
 	optimizeDeps: {
 		include: [
 			'frappe-ui > feather-icons',
-			'showdown',
+			'interactjs',
 			'engine.io-client',
 			'prosemirror-state',
 			'prosemirror-view',
