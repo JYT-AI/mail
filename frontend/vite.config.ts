@@ -64,8 +64,6 @@ export default defineConfig({
 				short_name: 'Frappe Mail',
 				start_url: '/mail',
 				description: 'Modern email client powered by Frappe',
-				theme_color: '#ffffff',
-				background_color: '#ffffff',
 				icons: [
 					{
 						src: '/assets/mail/frontend/manifest/manifest-icon-192.maskable.png',
