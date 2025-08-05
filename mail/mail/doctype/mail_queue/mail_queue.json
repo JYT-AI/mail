@@ -14,7 +14,8 @@
   "section_break_agmx",
   "save_as_draft",
   "destroy_after_submission",
-  "column_break_htqb",
+  "column_break_lnat",
+  "priority",
   "delivery_mode",
   "section_break_nug2",
   "failed_count",
@@ -106,6 +107,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "From Email",
+   "length": 255,
    "no_copy": 1,
    "search_index": 1,
    "set_only_once": 1
@@ -130,6 +132,7 @@
   },
   {
    "depends_on": "eval: doc.__islocal || doc.reply_to && doc.reply_to != \"[]\"",
+   "description": "Provide a JSON array of objects with display_name and email. <br>\nExample: <code>[{\"display_name\": \"Jane Smith\", \"email\": \"jane@example.com\"}]</code>",
    "fieldname": "reply_to",
    "fieldtype": "JSON",
    "label": "Reply To",
@@ -144,6 +147,7 @@
   },
   {
    "depends_on": "eval: doc.__islocal || doc.headers && doc.headers != \"{}\"",
+   "description": "Provide a JSON object with header name\u2013value pairs. <br>\nExample: <code>{\"X-Custom-Header\": \"Value\"}</code>",
    "fieldname": "headers",
    "fieldtype": "JSON",
    "label": "Headers",
@@ -156,6 +160,7 @@
   },
   {
    "depends_on": "eval: doc.__islocal || doc.recipients && doc.recipients != \"[]\"",
+   "description": "Provide a JSON array of recipients with type, display_name, and email. <br>\n<b>type</b> must be \"To\", \"Cc\", or \"Bcc\". <br>\nExample: <code>[{\"type\": \"To\", \"display_name\": \"Jane Smith\", \"email\": \"jane@example.com\"}]</code>",
    "fieldname": "recipients",
    "fieldtype": "JSON",
    "label": "Recipients",
@@ -188,6 +193,7 @@
   },
   {
    "depends_on": "eval: doc.__islocal || doc.attachments && doc.attachments != \"[]\"",
+   "description": "Provide a JSON array with file_url, disposition (inline or attachment), and cid. <br>\nExample: <code>[{\"file_url\": \"/private/files/image.png\", \"disposition\": \"inline\", \"cid\": \"j80BhiEC5o\"}]</code>",
    "fieldname": "attachments",
    "fieldtype": "JSON",
    "label": "Attachments",
@@ -314,10 +320,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "column_break_htqb",
-   "fieldtype": "Column Break"
-  },
-  {
    "default": "0",
    "depends_on": "eval: !doc.save_as_draft",
    "description": "If enabled, the message will be deleted after successful submission.",
@@ -349,9 +351,10 @@
    "depends_on": "eval: !doc.__islocal",
    "fieldname": "size",
    "fieldtype": "Int",
-   "label": "Size (Bytes)",
+   "label": "Size",
    "no_copy": 1,
    "non_negative": 1,
+   "options": "File Size",
    "read_only": 1
   },
   {
@@ -375,6 +378,7 @@
    "description": "<pre><b>Immediate</b> \u2014 send right after insert (after_insert).\n<b>Enqueue</b> \u2014 enqueue a job (using frappe.enqueue).\n<b>Batch</b> \u2014 wait to be picked up by a scheduled background job.\n</pre>",
    "fieldname": "delivery_mode",
    "fieldtype": "Select",
+   "in_standard_filter": 1,
    "label": "Delivery Mode",
    "no_copy": 1,
    "options": "Immediate\nEnqueue\nBatch",
@@ -519,12 +523,27 @@
    "label": "Newsletter",
    "no_copy": 1,
    "set_only_once": 1
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Priority",
+   "no_copy": 1,
+   "options": "\nLow\nNormal\nHigh",
+   "search_index": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "column_break_lnat",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-26 11:33:50.623947",
+ "modified": "2025-07-28 15:14:12.396905",
  "modified_by": "Administrator",
  "module": "Mail",
  "name": "Mail Queue",

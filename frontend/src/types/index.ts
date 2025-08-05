@@ -17,9 +17,9 @@ export interface User {
 	is_mail_user: boolean
 	is_mail_admin: boolean
 	is_tenant_owner?: boolean
+	is_system_manager: boolean
 
 	tenant_name?: string
-	roles: string[]
 	mailboxes: { id: string; name: string; role: string }[]
 }
 
@@ -54,6 +54,7 @@ export interface Mail {
 	received_at: string
 	draft: 0 | 1
 	flagged: 0 | 1
+	seen: 0 | 1
 	mailbox_role: string
 	recipients: {
 		To: Recipient[]
@@ -62,6 +63,7 @@ export interface Mail {
 	}
 	reply_to: string[]
 	attachments: Attachment[]
+	collapsed?: boolean
 }
 
 export interface ComposeMailData {

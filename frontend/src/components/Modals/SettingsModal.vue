@@ -2,7 +2,7 @@
 	<Dialog v-model="show" :options="{ title: __('Settings'), size: '4xl' }">
 		<template #body>
 			<div class="flex" :style="{ height: 'calc(100vh - 9rem)' }">
-				<div class="flex w-48 shrink-0 flex-col border-r bg-gray-50 p-4 py-3">
+				<div class="bg-surface-menu-bar flex w-52 shrink-0 flex-col border-r p-4 py-3">
 					<h1 class="px-2 text-xl leading-6">{{ __('Settings') }}</h1>
 					<div class="mt-3 space-y-1">
 						<button
@@ -10,12 +10,17 @@
 							:key="tab.label"
 							class="flex h-7 w-full items-center gap-2 rounded px-2 py-1"
 							:class="[
-								activeTab.label == tab.label ? 'bg-gray-200' : 'hover:bg-gray-100',
+								activeTab.label == tab.label
+									? 'bg-surface-gray-3'
+									: 'hover:bg-surface-gray-2',
 							]"
 							@click="activeTab = tab"
 						>
-							<component :is="tab.icon" class="h-4 w-4 stroke-[1.5] text-gray-700" />
-							<span class="text-base text-gray-800"> {{ tab.label }} </span>
+							<component
+								:is="tab.icon"
+								class="text-ink-gray-6 h-4 w-4 stroke-[1.5]"
+							/>
+							<span class="text-ink-gray-7 text-base"> {{ tab.label }} </span>
 						</button>
 					</div>
 				</div>
@@ -34,12 +39,13 @@
 </template>
 <script setup lang="ts">
 import { markRaw, ref } from 'vue'
-import { Code, Mailbox, User } from 'lucide-vue-next'
+import { Code, Mailbox, TreePalm, User } from 'lucide-vue-next'
 import { Button, Dialog } from 'frappe-ui'
 
 import AccountSettings from '@/components/Settings/AccountSettings.vue'
 import AdvancedSettings from '@/components/Settings/AdvancedSettings.vue'
 import ProfileSettings from '@/components/Settings/ProfileSettings.vue'
+import VacationResponseSettings from '@/components/Settings/VacationResponseSettings.vue'
 
 const show = defineModel<boolean>()
 
@@ -53,6 +59,11 @@ const tabs = [
 		label: __('Account'),
 		icon: Mailbox,
 		component: markRaw(AccountSettings),
+	},
+	{
+		label: __('Vacation Response'),
+		icon: TreePalm,
+		component: markRaw(VacationResponseSettings),
 	},
 	{
 		label: __('Advanced'),

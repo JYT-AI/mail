@@ -10,7 +10,7 @@
 		/>
 		<div class="mx-4 flex flex-col">
 			<span class="text-xl font-semibold">{{ user.data?.full_name }}</span>
-			<span class="text-base text-gray-700">{{ user.data?.email }}</span>
+			<span class="text-ink-gray-6 text-base">{{ user.data?.email }}</span>
 		</div>
 		<Button :label="__('Edit Photo')" class="ml-auto" @click="showEditPhoto = true" />
 	</div>
@@ -19,6 +19,7 @@
 	<ErrorMessage :message="setName.error" />
 	<Button
 		:label="__('Save Changes')"
+		class="min-h-7"
 		variant="solid"
 		:disabled="
 			!firstName ||
@@ -27,7 +28,7 @@
 		:loading="setName.isLoading"
 		@click="setName.submit"
 	/>
-	<Button :label="__('Change Password')" @click="showChangePassword = true" />
+	<Button class="min-h-7" :label="__('Change Password')" @click="showChangePassword = true" />
 
 	<EditPhotoModal v-model="showEditPhoto" />
 	<ChangePasswordModal v-model="showChangePassword" />

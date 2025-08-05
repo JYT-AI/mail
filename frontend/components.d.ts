@@ -28,6 +28,7 @@ declare module 'vue' {
     EditAliasModal: typeof import('./src/components/Modals/EditAliasModal.vue')['default']
     EditInviteModal: typeof import('./src/components/Modals/EditInviteModal.vue')['default']
     EditPhotoModal: typeof import('./src/components/Modals/EditPhotoModal.vue')['default']
+    EmailContent: typeof import('./src/components/EmailContent.vue')['default']
     EmojiPicker: typeof import('./src/components/EmojiPicker.vue')['default']
     EmptyLayout: typeof import('./src/components/EmptyLayout.vue')['default']
     FrappeLogo: typeof import('./src/components/Icons/FrappeLogo.vue')['default']
@@ -54,5 +55,6 @@ declare module 'vue' {
     SettingsModal: typeof import('./src/components/Modals/SettingsModal.vue')['default']
     SidebarLink: typeof import('./src/components/SidebarLink.vue')['default']
     UserDropdown: typeof import('./src/components/UserDropdown.vue')['default']
+    VacationResponseSettings: typeof import('./src/components/Settings/VacationResponseSettings.vue')['default']
   }
 }

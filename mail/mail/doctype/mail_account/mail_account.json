@@ -19,6 +19,13 @@
   "secret",
   "default_outgoing_email",
   "backup_email",
+  "section_break_wzwp",
+  "_disk_quota",
+  "disk_quota",
+  "_used_quota",
+  "used_quota",
+  "column_break_rrsz",
+  "quota_usage",
   "section_break_gexs",
   "display_name",
   "override_display_name",
@@ -28,7 +35,6 @@
   "vacation_response_tab",
   "vacation_response_enabled",
   "column_break_xhfw",
-  "vacation_response_state",
   "section_break_ttgy",
   "vacation_from_date",
   "vacation_to_date",
@@ -96,6 +102,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Email",
+   "length": 255,
    "no_copy": 1,
    "options": "Email",
    "read_only": 1,
@@ -142,6 +149,7 @@
    "fieldname": "default_outgoing_email",
    "fieldtype": "Data",
    "label": "Default Email",
+   "length": 255,
    "no_copy": 1,
    "options": "Email",
    "unique": 1
@@ -164,6 +172,7 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Normalized Email",
+   "length": 255,
    "no_copy": 1,
    "options": "Email",
    "read_only": 1,
@@ -174,6 +183,7 @@
    "fieldname": "backup_email",
    "fieldtype": "Data",
    "label": "Backup Email",
+   "length": 255,
    "reqd": 1
   },
   {
@@ -198,9 +208,10 @@
    "default": "0",
    "fieldname": "vacation_response_enabled",
    "fieldtype": "Check",
+   "is_virtual": 1,
    "label": "Enabled",
    "no_copy": 1,
-   "search_index": 1
+   "read_only": 1
   },
   {
    "fieldname": "section_break_ttgy",
@@ -209,16 +220,20 @@
   {
    "fieldname": "vacation_from_date",
    "fieldtype": "Datetime",
+   "is_virtual": 1,
    "label": "From Date",
    "mandatory_depends_on": "eval: doc.vacation_response_enabled",
-   "no_copy": 1
+   "no_copy": 1,
+   "read_only": 1
   },
   {
    "fieldname": "vacation_to_date",
    "fieldtype": "Datetime",
+   "is_virtual": 1,
    "label": "To Date",
    "mandatory_depends_on": "eval: doc.vacation_response_enabled",
-   "no_copy": 1
+   "no_copy": 1,
+   "read_only": 1
   },
   {
    "fieldname": "column_break_j94t",
@@ -227,8 +242,10 @@
   {
    "fieldname": "vacation_response_subject",
    "fieldtype": "Small Text",
+   "is_virtual": 1,
    "label": "Subject",
-   "no_copy": 1
+   "no_copy": 1,
+   "read_only": 1
   },
   {
    "fieldname": "vacation_response_body_section",
@@ -238,26 +255,22 @@
   {
    "fieldname": "vacation_response_text_body",
    "fieldtype": "Code",
-   "label": "Text Body",
-   "no_copy": 1
+   "is_virtual": 1,
+   "label": "Text",
+   "no_copy": 1,
+   "read_only": 1
   },
   {
    "fieldname": "vacation_response_html_body",
-   "fieldtype": "Code",
-   "label": "HTML Body",
-   "no_copy": 1
+   "fieldtype": "Text Editor",
+   "is_virtual": 1,
+   "label": "HTML",
+   "no_copy": 1,
+   "read_only": 1
   },
   {
    "fieldname": "column_break_xhfw",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "vacation_response_state",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "State",
-   "no_copy": 1,
-   "read_only": 1
   },
   {
    "default": "0",
@@ -270,6 +283,68 @@
    "fieldname": "destroy_newsletter_after_submission",
    "fieldtype": "Check",
    "label": "Destroy Newsletter After Submission"
+  },
+  {
+   "depends_on": "eval: !doc.__islocal",
+   "description": "<code><b>0</b></code> means no quota restriction.",
+   "fieldname": "disk_quota",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "is_virtual": 1,
+   "label": "Disk Quota (in GB)",
+   "no_copy": 1,
+   "precision": "5",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_wzwp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_rrsz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: !doc.__islocal",
+   "description": "<code><b>0</b></code> means no usage.",
+   "fieldname": "used_quota",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "is_virtual": 1,
+   "label": "Used Quota (in GB)",
+   "no_copy": 1,
+   "precision": "5",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval: !doc.__islocal",
+   "fieldname": "quota_usage",
+   "fieldtype": "Percent",
+   "is_virtual": 1,
+   "label": "Quota Usage",
+   "no_copy": 1,
+   "precision": "5",
+   "read_only": 1
+  },
+  {
+   "description": "<code><b>0</b></code> means no quota restriction.",
+   "fieldname": "_disk_quota",
+   "fieldtype": "Int",
+   "is_virtual": 1,
+   "label": "Disk Quota",
+   "no_copy": 1,
+   "options": "File Size",
+   "read_only": 1
+  },
+  {
+   "description": "<code><b>0</b></code> means no usage.",
+   "fieldname": "_used_quota",
+   "fieldtype": "Int",
+   "is_virtual": 1,
+   "label": "Used Quota",
+   "no_copy": 1,
+   "options": "File Size",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
@@ -311,7 +386,7 @@
    "link_fieldname": "account"
   }
  ],
- "modified": "2025-06-26 11:21:00.562086",
+ "modified": "2025-07-17 13:01:33.729262",
  "modified_by": "Administrator",
  "module": "Mail",
  "name": "Mail Account",

@@ -14,19 +14,19 @@
 			variant="outline"
 		/>
 		<Switch
-			v-model="account.doc.create_mail_contact"
+			v-model="createMailContact"
 			:label="__('Create Mail Contacts')"
 			:description="__('Create contacts of people you send mails to.')"
 		/>
 		<Switch
-			v-model="account.doc.destroy_email_after_submission"
+			v-model="destroyEmailAfterSubmission"
 			:label="__('Delete Email After Sending')"
 			:description="
 				__('Automatically deletes the email from your mailbox after it is sent.')
 			"
 		/>
 		<Switch
-			v-model="account.doc.destroy_newsletter_after_submission"
+			v-model="destroyNewsletterAfterSubmission"
 			:label="__('Delete Newsletter After Sending')"
 			:description="__('Automatically deletes the newsletter after it is sent.')"
 		/>
@@ -49,43 +49,6 @@
 			variant="outline"
 		/>
 
-		<h1>{{ __('Vacation Response') }}</h1>
-		<Switch
-			v-model="account.doc.vacation_response_enabled"
-			:label="__('Enabled')"
-			:description="__('Auto-reply to incoming mails while you’re away.')"
-		/>
-		<template v-if="account.doc.vacation_response_enabled">
-			<FormControl
-				v-model="account.doc.vacation_from_date"
-				type="datetime-local"
-				:label="__('From Date')"
-				variant="outline"
-			/>
-			<FormControl
-				v-model="account.doc.vacation_to_date"
-				type="datetime-local"
-				:label="__('To Date')"
-				variant="outline"
-			/>
-			<FormControl
-				v-model="account.doc.vacation_response_subject"
-				:label="__('Subject')"
-				placeholder="Out of Office"
-				variant="outline"
-			/>
-			<div class="space-y-1.5">
-				<label class="text-ink-gray-5 block text-xs">{{ __('Message') }}</label>
-				<TextEditor
-					editor-class="prose-sm min-h-[8rem] border rounded-b-lg border-t-0 p-2 max-w-none"
-					placeholder="Type something..."
-					:fixed-menu="textEditorButtons"
-					:content="account.doc.vacation_response_html_body"
-					@change="(val) => (account.doc.vacation_response_html_body = val)"
-				/>
-			</div>
-		</template>
-
 		<h1>{{ __('Recovery') }}</h1>
 		<FormControl
 			v-model="account.doc.backup_email"
@@ -100,23 +63,16 @@
 			:disabled="JSON.stringify(account.doc) === JSON.stringify(account.originalDoc)"
 			:loading="account.save.loading"
 			class="min-h-7"
-			@click="account.save.submit"
+			@click="() => account.save.submit()"
 		/>
 	</template>
 </template>
 
 <script setup lang="ts">
-import { inject, ref } from 'vue'
-import {
-	Button,
-	ErrorMessage,
-	FormControl,
-	Switch,
-	TextEditor,
-	createDocumentResource,
-} from 'frappe-ui'
+import { computed, inject, ref } from 'vue'
+import { Button, ErrorMessage, FormControl, Switch, createDocumentResource } from 'frappe-ui'
 
-import { raiseToast, textEditorButtons } from '@/utils'
+import { raiseToast } from '@/utils'
 import AutocompleteControl from '@/components/Controls/AutocompleteControl.vue'
 
 import type { MailAccount } from '@/types/doctypes'
@@ -126,20 +82,25 @@ const user = inject('$user')
 const account = createDocumentResource({
 	doctype: 'Mail Account',
 	name: user.data?.name,
-	transform(data: MailAccount) {
-		const keys = [
-			'enabled',
-			'create_mail_contact',
-			'destroy_email_after_submission',
-			'destroy_newsletter_after_submission',
-			'vacation_response_enabled',
-		] as const
-		for (const key of keys) data[key] = !!data[key]
-	},
 	setValue: {
 		onSuccess: () => raiseToast(__('Account settings saved successfully')),
 	},
 	onSuccess: (data: MailAccount) => (setCustomReplyTo.value = !!data.reply_to),
+})
+
+const createMailContact = computed({
+	get: () => !!account.doc.create_mail_contact,
+	set: (val: boolean) => (account.doc.create_mail_contact = val ? 1 : 0),
+})
+
+const destroyEmailAfterSubmission = computed({
+	get: () => !!account.doc.destroy_email_after_submission,
+	set: (val: boolean) => (account.doc.destroy_email_after_submission = val ? 1 : 0),
+})
+
+const destroyNewsletterAfterSubmission = computed({
+	get: () => !!account.doc.destroy_newsletter_after_submission,
+	set: (val: boolean) => (account.doc.destroy_newsletter_after_submission = val ? 1 : 0),
 })
 
 const setCustomReplyTo = ref(account.doc?.reply_to)

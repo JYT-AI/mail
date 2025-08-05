@@ -15,16 +15,16 @@
 				<div
 					v-for="(result, idx) in results?.data?.docs"
 					:key="idx"
-					class="flex rounded p-2 hover:cursor-pointer hover:bg-gray-50"
+					class="hover:bg-surface-gray-3 flex rounded p-2 hover:cursor-pointer"
 					@click="openMail(result.mailbox_role, result.thread_id)"
 				>
-					<div class="space-y-1">
-						<p class="text-base font-semibold">
+					<div class="mr-2 space-y-1 truncate">
+						<p class="truncate text-base font-semibold">
 							{{ result.subject || __('[No subject]') }}
 						</p>
-						<p class="text-sm">{{ getInterlocutors(result) }}</p>
+						<p class="truncate text-sm">{{ getInterlocutors(result) }}</p>
 					</div>
-					<p class="text-ink-gray-4 ml-auto text-xs">
+					<p class="text-ink-gray-4 ml-auto shrink-0 text-xs">
 						{{ getFormattedDate(result.received_at) }}
 					</p>
 				</div>

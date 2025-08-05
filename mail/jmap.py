@@ -1,3 +1,4 @@
+import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 from urllib.parse import urljoin
@@ -30,7 +31,7 @@ class JMAPClient:
 
 		well_known_url = urljoin(self.__host, "/.well-known/jmap")
 		response = self.__session.get(well_known_url, headers={"Accept": "application/json"})
-		response.raise_for_status()
+		raise_for_status(response)
 		self.__config = response.json()
 
 	def _validate_capabilities(self, capabilities: list[str]) -> None:
@@ -68,8 +69,10 @@ class JMAPClient:
 
 		headers = {"Content-Type": "application/json", "Accept": "application/json"}
 		payload = {"using": using, "methodCalls": method_calls}
-		response = self.__session.post(self.api_url, headers=headers, json=payload)
-		response.raise_for_status()
+		response = self.__session.post(
+			self.api_url, headers=headers, data=json.dumps(payload, ensure_ascii=False)
+		)
+		raise_for_status(response)
 
 		return response.json()
 
@@ -216,8 +219,10 @@ class JMAPClient:
 		"""Returns the mailbox ID for the given role or name."""
 
 		for mailbox in self.mailboxes[self.account_id]:
-			if (role and mailbox.get("role").lower() == role.lower()) or (
-				name and mailbox.get("name").lower() == name.lower()
+			mailbox_role = mailbox.get("role") or ""
+			mailbox_name = mailbox.get("name") or ""
+			if (role and mailbox_role.lower() == role.lower()) or (
+				name and mailbox_name.lower() == name.lower()
 			):
 				return mailbox["id"]
 
@@ -232,7 +237,8 @@ class JMAPClient:
 		"""Returns the mailbox name for the given ID or role."""
 
 		for mailbox in self.mailboxes[self.account_id]:
-			if (id and mailbox.get("id") == id) or (role and mailbox.get("role").lower() == role.lower()):
+			mailbox_role = mailbox.get("role") or ""
+			if (id and mailbox.get("id") == id) or (role and mailbox_role.lower() == role.lower()):
 				return mailbox["name"]
 
 	def email_query(self, filter: dict, position: int = 0, limit: int = 50) -> dict:
@@ -362,7 +368,7 @@ class JMAPClient:
 			accountId=self.account_id, blobId=blob_id, name=name, type="application/octet-stream"
 		)
 		response = self.__session.get(download_url)
-		response.raise_for_status()
+		raise_for_status(response)
 
 		return response.content
 
@@ -371,7 +377,7 @@ class JMAPClient:
 
 		upload_url = self.upload_url.format(accountId=self.account_id)
 		response = self.__session.post(upload_url, data=blob, headers={"Content-Type": content_type})
-		response.raise_for_status()
+		raise_for_status(response)
 
 		return response.json()
 
@@ -383,7 +389,7 @@ class JMAPClient:
 		def upload_single_blob(blob: tuple[bytes | str, str]) -> dict:
 			content, content_type = blob
 			response = self.__session.post(upload_url, data=content, headers={"Content-Type": content_type})
-			response.raise_for_status()
+			raise_for_status(response)
 			return response.json()
 
 		results = []
@@ -605,7 +611,7 @@ class JMAPClient:
 				],
 			)
 
-	def vacation_response_get(self) -> tuple[dict, str]:
+	def vacation_response_get(self) -> dict:
 		"""Returns the vacation response for the logged-in user."""
 
 		response = self._make_request(
@@ -622,8 +628,7 @@ class JMAPClient:
 		)
 
 		vacation_responses = response["methodResponses"][0][1]["list"]
-		state = response["methodResponses"][0][1]["state"]
-		return (vacation_responses[0], state) if vacation_responses else ({}, state)
+		return vacation_responses[0] if vacation_responses else {}
 
 	def vacation_response_set(
 		self,
@@ -779,3 +784,16 @@ def get_mailbox_name_for_account(account: str, id: str | None = None, role: str 
 
 	validate_permission_for_account(account)
 	return get_mailbox_name(account, id, role)
+
+
+def raise_for_status(response: requests.Response) -> None:
+	"""Raises an HTTPError if the response status code indicates an error."""
+
+	if not response.ok:
+		try:
+			error_text = response.json()
+		except Exception:
+			error_text = response.text.strip()
+
+		message = _("Error {0}: {1}").format(response.status_code, error_text)
+		raise requests.exceptions.HTTPError(message, response=response)

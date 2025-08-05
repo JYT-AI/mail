@@ -14,7 +14,7 @@ from frappe.core.doctype.file.file import File
 from frappe.core.doctype.file.file import has_permission as has_file_permission
 from frappe.core.doctype.file.utils import find_file_by_url
 from frappe.model.document import Document
-from frappe.query_builder import Order
+from frappe.query_builder import Case, Order
 from frappe.utils import (
 	add_to_date,
 	cint,
@@ -32,7 +32,7 @@ from mail.jmap import get_identities, get_jmap_client, get_mailbox_id
 from mail.utils.cache import get_account_for_email, get_account_for_user
 from mail.utils.dt import convert_to_utc, parsedate_to_datetime
 from mail.utils.user import get_account_email_addresses, is_account_owner, is_system_manager
-from mail.utils.validation import validate_domain_is_enabled_and_verified
+from mail.utils.validation import validate_domain_is_enabled_and_verified, validate_email_address
 
 
 class MailQueue(Document):
@@ -114,6 +114,17 @@ class MailQueue(Document):
 			doc.insert()
 
 		return doc
+
+	@property
+	def _priority(self) -> str:
+		"""Returns the MT-Priority value based on the priority field."""
+
+		mt_priority_map = {
+			"Low": "-4",
+			"Normal": "0",
+			"High": "4",
+		}
+		return mt_priority_map.get(self.priority, "0")
 
 	@property
 	def to(self) -> list[dict[str, str | None]]:
@@ -202,7 +213,7 @@ class MailQueue(Document):
 		if self.status == "Failed to Draft":
 			data = response["methodResponses"][0][1].get("notCreated", {}).get(f"draft-{self.name}")
 		elif self.status == "Failed to Submit":
-			data = response["methodResponses"][1][1].get("notCreated", {}).get(f"submit-{self.name}")
+			data = response["methodResponses"][-1][1].get("notCreated", {}).get(f"submit-{self.name}")
 
 		if data:
 			message = f"{data['type']}: {data['description']}"
@@ -231,6 +242,7 @@ class MailQueue(Document):
 			self.validate_message_id()
 			self.validate_from_ip()
 			self.validate_sent_at()
+			self.validate_priority()
 			self.validate_in_reply_to()
 			self.validate_in_reply_to_id()
 
@@ -291,6 +303,9 @@ class MailQueue(Document):
 				# If the `From` address doesn't match any of the account's associated addresses,
 				# reset it to fall back to the account's default email address.
 				self.from_email = None
+
+		if message_id := message.get("Message-ID"):
+			self.message_id = message_id.strip("<>")
 
 		if not json_loads(self.recipients):
 			recipients = []
@@ -433,6 +448,12 @@ class MailQueue(Document):
 
 		recipients = []
 		for rcpt in json_loads(self.recipients, default=[]):
+			if not rcpt["type"] or not rcpt["email"]:
+				continue
+
+			if not validate_email_address(rcpt["email"], check_mx=False, verify=False):
+				frappe.throw(_("Invalid email address: {0}").format(frappe.bold(rcpt["email"])))
+
 			recipients.append(
 				{
 					"type": rcpt["type"],
@@ -512,6 +533,19 @@ class MailQueue(Document):
 
 		if not self.raw_message:
 			self.sent_at = now()
+
+	def validate_priority(self) -> None:
+		"""Validates the priority."""
+
+		if self.priority:
+			return
+
+		if self.newsletter:
+			self.priority = "Low"
+		elif self.received_after <= 5:
+			self.priority = "High"
+		else:
+			self.priority = "Normal"
 
 	def validate_in_reply_to(self) -> None:
 		"""Validates the In Reply To (Message ID)."""
@@ -642,6 +676,7 @@ class MailQueue(Document):
 										"parameters": {
 											"RET": "FULL",
 											"ENVID": self.name,
+											"MT-PRIORITY": self._priority,
 										},
 									},
 									"rcptTo": [
@@ -878,6 +913,13 @@ def enqueue_process_pending_emails(batch_process_size: int = 1_000, max_batch_si
 	"""Enqueue process pending emails."""
 
 	MQ = frappe.qb.DocType("Mail Queue")
+
+	priority_order = Case()
+	priority_order.when(MQ.priority == "High", 1)
+	priority_order.when(MQ.priority == "Normal", 2)
+	priority_order.when(MQ.priority == "Low", 3)
+	priority_order.else_(4)
+
 	mails = (
 		frappe.qb.from_(MQ)
 		.select(MQ.name)
@@ -891,7 +933,7 @@ def enqueue_process_pending_emails(batch_process_size: int = 1_000, max_batch_si
 			)
 			| ((MQ.status == "Queued") & (MQ.queued_at <= get_datetime(add_to_date(now(), minutes=-30))))
 		)
-		.orderby(MQ.creation, MQ.failed_count, order=Order.asc)
+		.orderby(priority_order, MQ.creation, MQ.failed_count, order=Order.asc)
 		.limit(max_batch_size)
 	).run(pluck="name")
 

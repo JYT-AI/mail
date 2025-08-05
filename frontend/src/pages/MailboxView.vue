@@ -1,8 +1,6 @@
 <template>
 	<!-- Header -->
-	<header
-		class="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-3 py-2.5 sm:px-5"
-	>
+	<header class="flex items-center justify-between border-b px-3 py-2.5 sm:px-5">
 		<div class="flex items-center space-x-2">
 			<Button v-if="isMobile" icon="menu" variant="ghost" @click="openSidebar" />
 			<Breadcrumbs
@@ -128,7 +126,7 @@
 					@scroll="loadMoreEmails"
 				>
 					<div v-for="(group, key) in groupedThreads" :key="key">
-						<div class="text-ink-gray-6 border-b px-5 py-3.5 text-xs font-semibold">
+						<div class="text-ink-gray-6 border-b p-3.5 text-xs font-semibold sm:px-5">
 							{{ getFormattedDate(key).toUpperCase() }}
 						</div>
 						<MailListItem
@@ -137,14 +135,19 @@
 							:key="mail.thread_id"
 							:mail
 							:user-layout
-							:class="{ 'bg-gray-50': mail.thread_id == threadID }"
-							@click="openThread(mail)"
+							:class="{ 'bg-surface-gray-1': mail.thread_id == threadID }"
+							@click="
+								router.push({
+									name: 'Mail',
+									params: { mailbox, threadID: mail.thread_id },
+								})
+							"
 							@select-thread="
-								(isManuallySelected) =>
+								(isManuallySelected: boolean) =>
 									selectThread(mail.thread_id, isManuallySelected)
 							"
 							@deselect-thread="
-								(isManuallySelected) =>
+								(isManuallySelected: boolean) =>
 									deselectThread(mail.thread_id, isManuallySelected)
 							"
 						/>
@@ -165,18 +168,17 @@
 			<div class="flex cursor-col-resize justify-center" @mousedown="startResizing">
 				<div
 					ref="resizer"
-					class="h-full rounded-full transition-all duration-300 ease-in-out group-hover:bg-gray-400"
+					class="group-hover:bg-surface-gray-5 h-full rounded-full transition-all duration-300 ease-in-out"
 				/>
 			</div>
 
 			<!-- Mail thread -->
 			<div
-				class="overflow-y-auto bg-white"
+				class="bg-surface-white overflow-y-auto"
 				:class="{
 					'w-2/3': !isMobile && userLayout === 'split',
-					'absolute bottom-0 left-0 right-0 top-0 z-10':
-						!isMobile && userLayout === 'full',
-					'fixed inset-0 z-10': isMobile,
+					'absolute bottom-0 left-0 right-0 top-0': !isMobile && userLayout === 'full',
+					'fixed inset-0': isMobile,
 					hidden: (isMobile || userLayout === 'full') && !threadID,
 				}"
 			>
@@ -184,7 +186,7 @@
 					:mailbox
 					:thread-i-d
 					@reload-mails="reloadMails"
-					@mark-as-unread="setSeen.submit({ thread_ids: [threadID], seen: false })"
+					@set-seen="(seen: boolean) => setSeen.submit({ thread_ids: [threadID], seen })"
 					@move-thread="
 						(move_to_mailbox: string) =>
 							moveThreads.submit({ thread_ids: [threadID], move_to_mailbox })
@@ -196,7 +198,7 @@
 
 		<!-- No mails -->
 		<div v-else class="text-ink-gray-5 flex w-full flex-col items-center justify-center">
-			<NoMails class="mb-2 h-16 w-16" />
+			<NoMails class="text-ink-gray-2 mb-2 h-16 w-16" />
 			<p>{{ __('You have no mails in this folder.') }}</p>
 		</div>
 	</div>
@@ -362,7 +364,9 @@ const selectActions = computed((): SelectAction[] =>
 // Main data
 
 const limit = ref(50)
-const filter = ref<string | null>(null)
+const filter = ref<string | null>(
+	localStorage.getItem(`user:${user.data.name}:filter:${mailbox}`) || null,
+)
 
 const threads = createResource({
 	url: 'mail.api.mail.get_mails_from_mailbox',
@@ -397,7 +401,7 @@ const reloadMails = () => {
 watch(
 	() => mailbox,
 	() => {
-		filter.value = null
+		filter.value = localStorage.getItem(`user:${user.data.name}:filter:${mailbox}`) || null
 		limit.value = 50
 		reloadMails()
 	},
@@ -455,11 +459,6 @@ const setSeen = createResource({
 			router.push({ name: 'Mailbox', params: { mailbox } })
 	},
 })
-
-const openThread = (mail: Thread) => {
-	router.push({ name: 'Mail', params: { mailbox, threadID: mail.thread_id } })
-	if (!mail.seen) setSeen.submit({ thread_ids: [mail.thread_id], seen: true })
-}
 
 const moveThreads = createResource({
 	url: 'mail.api.mail.set_threads_mailbox',
@@ -527,6 +526,7 @@ const FILTER_OPTIONS = [
 
 const setFilter = (value: string | null) => {
 	filter.value = value
+	localStorage.setItem(`user:${user.data.name}:filter:${mailbox}`, value ?? '')
 	threads.reload()
 	resetSelections()
 }
