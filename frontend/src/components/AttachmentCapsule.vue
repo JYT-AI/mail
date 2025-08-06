@@ -29,7 +29,6 @@
 import { ref } from 'vue'
 import { Loader, Paperclip, Download } from 'lucide-vue-next'
 import { createResource } from 'frappe-ui'
-import { __ } from '@/utils'
 
 const { fileName, blobID, type } = defineProps<{
 	fileName: string
