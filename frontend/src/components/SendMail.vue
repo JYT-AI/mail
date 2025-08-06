@@ -106,28 +106,38 @@
 
 						<!-- Attachments -->
 						<div class="text-ink-gray-6 mt-auto flex flex-col gap-2.5 pt-2.5">
-							<a
+							<div
 								v-for="(file, index) in mail.attachments.filter(
 									(file: Attachment) => file.disposition === 'attachment',
 								)"
 								:key="index"
-								class="bg-surface-gray-2 flex cursor-pointer items-center rounded p-2.5"
-								:href="file.file_url"
-								target="_blank"
-								@click="openAttachment(file.blob_id, file.type)"
+								class="bg-surface-gray-2 flex cursor-pointer items-center rounded p-2.5 group"
 							>
-								<span class="mr-1 font-medium">
-									{{ file.file_name || file.filename || file.name }}
-								</span>
-								<span class="mr-1 font-extralight">
-									({{ formatBytes(file.file_size || file.size) }})
-								</span>
+								<div
+									class="flex items-center flex-1 min-w-0"
+									@click="openAttachment(file.blob_id, file.type)"
+								>
+									<span class="mr-1 font-medium">
+										{{ file.file_name || file.filename || file.name }}
+									</span>
+									<span class="mr-1 font-extralight">
+										({{ formatBytes(file.file_size || file.size) }})
+									</span>
+								</div>
+								<button
+									v-if="file.blob_id"
+									class="text-ink-gray-4 hover:text-ink-gray-6 opacity-0 group-hover:opacity-100 transition-opacity mr-2"
+									@click.stop="downloadAttachment(file.blob_id, file.file_name || file.filename || file.name, file.type)"
+									:title="__('Download')"
+								>
+									<FeatherIcon name="download" class="h-3.5 w-3.5" />
+								</button>
 								<FeatherIcon
-									class="ml-auto h-3.5 w-3.5"
+									class="h-3.5 w-3.5"
 									name="x"
 									@click.stop.prevent="mail.attachments.splice(index, 1)"
 								/>
-							</a>
+							</div>
 						</div>
 					</div>
 				</template>
@@ -370,6 +380,26 @@ const openAttachment = async (blob_id?: string, type?: string) => {
 	const blob = new Blob([byteArray], { type })
 	const url = URL.createObjectURL(blob)
 	window.open(url, '_blank')
+}
+
+const downloadAttachment = async (blob_id?: string, fileName?: string, type?: string) => {
+	if (!blob_id) return
+
+	const data = await fetchAttachment.submit(blob_id)
+	const byteArray = new Uint8Array(data)
+	const blob = new Blob([byteArray], { type })
+	const url = URL.createObjectURL(blob)
+
+	// Create a temporary link element for download
+	const link = document.createElement('a')
+	link.href = url
+	link.download = fileName || 'attachment'
+	document.body.appendChild(link)
+	link.click()
+	document.body.removeChild(link)
+
+	// Clean up the object URL
+	URL.revokeObjectURL(url)
 }
 
 const uploadFunction = async (file: File) => {
