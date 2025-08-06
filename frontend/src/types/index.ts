@@ -52,10 +52,10 @@ export interface Mail {
 	html_body: string
 	text_body: string
 	received_at: string
+	mailbox_id: string
 	draft: 0 | 1
 	flagged: 0 | 1
 	seen: 0 | 1
-	mailbox_role: string
 	recipients: {
 		To: Recipient[]
 		Cc: Recipient[]
@@ -88,6 +88,7 @@ export interface Thread {
 	preview: string | null
 	has_attachment: 0 | 1
 	received_at: string
+	mailbox_id: string
 	seen: 0 | 1
 	draft: 0 | 1
 	flagged: 0 | 1
