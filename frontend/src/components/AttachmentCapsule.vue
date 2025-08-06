@@ -15,12 +15,15 @@
 			<span class="truncate text-sm">{{ fileName }}</span>
 		</button>
 		<button
-			v-if="blobID && !isLoading"
+			v-if="blobID"
 			class="text-ink-gray-4 hover:text-ink-gray-6 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded hover:bg-gray-100"
+			:class="{ 'pointer-events-none opacity-30': isDownloading }"
 			@click.stop="downloadAttachment"
 			:title="__('Download')"
+			:disabled="isDownloading"
 		>
-			<Download class="h-3.5 w-3.5" />
+			<Loader v-if="isDownloading" class="h-3.5 w-3.5 animate-spin" />
+			<Download v-else class="h-3.5 w-3.5" />
 		</button>
 	</div>
 </template>
@@ -37,6 +40,7 @@ const { fileName, blobID, type } = defineProps<{
 }>()
 
 const isLoading = ref(false)
+const isDownloading = ref(false)
 
 const openAttachment = async () => {
 	if (!blobID) return
@@ -47,9 +51,9 @@ const openAttachment = async () => {
 
 const downloadAttachment = async () => {
 	if (!blobID) return
-	isLoading.value = true
+	isDownloading.value = true
 	await fetchAttachmentForDownload.submit()
-	isLoading.value = false
+	isDownloading.value = false
 }
 
 const fetchAttachment = createResource({
@@ -85,6 +89,6 @@ const fetchAttachmentForDownload = createResource({
 		// Clean up the object URL
 		URL.revokeObjectURL(url)
 	},
-	onError: () => (isLoading.value = false),
+	onError: () => (isDownloading.value = false),
 })
 </script>
