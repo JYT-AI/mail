@@ -13,7 +13,7 @@
 		</button>
 		<button
 			v-if="blobID"
-			class="rounded p-1 text-ink-gray-4 transition-opacity hover:bg-gray-100 hover:text-ink-gray-6"
+			class="text-ink-gray-4 hover:text-ink-gray-6 rounded p-1 transition-opacity hover:bg-gray-100"
 			:class="{
 				'pointer-events-none opacity-30': isDownloading,
 				'opacity-0 group-hover:opacity-100': !isMobile,
