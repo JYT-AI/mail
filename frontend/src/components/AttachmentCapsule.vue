@@ -3,10 +3,7 @@
 		class="group flex items-center space-x-2 rounded-full border px-2 py-1.5"
 		:class="{ 'hover:border-outline-gray-3 cursor-pointer': blobID }"
 	>
-		<button
-			class="flex min-w-0 flex-1 items-center space-x-2"
-			@click="openAttachment"
-		>
+		<button class="flex min-w-0 flex-1 items-center space-x-2" @click="openAttachment">
 			<Loader
 				v-if="isLoading"
 				class="text-ink-gray-4 h-3.5 min-h-3.5 w-3.5 min-w-3.5 animate-spin"
