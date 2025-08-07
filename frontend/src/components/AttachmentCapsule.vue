@@ -13,8 +13,12 @@
 		</button>
 		<button
 			v-if="blobID"
-			class="text-ink-gray-4 hover:text-ink-gray-6 rounded p-1 opacity-0 transition-opacity hover:bg-gray-100 group-hover:opacity-100"
-			:class="{ 'pointer-events-none opacity-30': isDownloading }"
+			class="text-ink-gray-4 hover:text-ink-gray-6 rounded p-1 transition-opacity hover:bg-gray-100"
+			:class="{
+				'pointer-events-none opacity-30': isDownloading,
+				'opacity-0 group-hover:opacity-100': !isMobile,
+				'opacity-60': isMobile
+			}"
 			@click.stop="downloadAttachment"
 			:title="__('Download')"
 			:disabled="isDownloading"
@@ -30,11 +34,15 @@ import { ref } from 'vue'
 import { Download, Loader, Paperclip } from 'lucide-vue-next'
 import { createResource } from 'frappe-ui'
 
+import { useScreenSize } from '@/utils/composables'
+
 const { fileName, blobID, type } = defineProps<{
 	fileName: string
 	blobID?: string
 	type?: string
 }>()
+
+const { isMobile } = useScreenSize()
 
 const isLoading = ref(false)
 const isDownloading = ref(false)
