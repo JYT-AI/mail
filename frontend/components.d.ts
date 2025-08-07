@@ -44,6 +44,7 @@ declare module 'vue' {
     MailLogo: typeof import('./src/components/Icons/MailLogo.vue')['default']
     MailThread: typeof import('./src/components/MailThread.vue')['default']
     MailThreadPlaceholder: typeof import('./src/components/MailThreadPlaceholder.vue')['default']
+    MailTransferSettings: typeof import('./src/components/Settings/MailTransferSettings.vue')['default']
     MultiselectInputControl: typeof import('./src/components/Controls/MultiselectInputControl.vue')['default']
     NoMails: typeof import('./src/components/Icons/NoMails.vue')['default']
     ProfileSettings: typeof import('./src/components/Settings/ProfileSettings.vue')['default']
