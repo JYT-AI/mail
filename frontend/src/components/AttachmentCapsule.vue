@@ -33,6 +33,7 @@
 import { ref } from 'vue'
 import { Download, Loader, Paperclip } from 'lucide-vue-next'
 import { createResource } from 'frappe-ui'
+
 import { useScreenSize } from '@/utils/composables'
 
 const { fileName, blobID, type } = defineProps<{
