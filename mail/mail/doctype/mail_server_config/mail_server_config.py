@@ -1,31 +1,42 @@
 # Copyright (c) 2025, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+import json
+
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
+from mail.backend import get_mail_backend_api
+from mail.jmap import raise_for_status
 from mail.utils import flatten_dict, password_or_none
 
 LOCAL_KEYS = [
 	"store.*",
 	"directory.*",
 	"tracer.*",
-	"server.*",
+	"metrics.*",
 	"!server.blocked-ip.*",
 	"!server.allowed-ip.*",
+	"server.*",
+	"authentication.fallback-admin.*",
+	"cluster.*",
 	"config.local-keys.*",
-	"certificate.*",
-	"cluster.node-id",
-	"cluster.bind-addr",
-	"cluster.advertise-addr",
-	"cluster.heartbeat",
-	"cluster.seed-nodes",
-	"storage.directory",
 	"storage.data",
 	"storage.blob",
-	"storage.fts",
 	"storage.lookup",
-	"authentication.fallback-admin.*",
+	"storage.fts",
+	"storage.directory",
+	"storage.full-text.*",
+	"certificate.*",
+	"account.purge.frequency",
+	"jmap.email.*",
+	"jmap.protocol.*",
+	"jmap.mailbox.*",
+	"jmap.push.*",
+	"email.encryption.*",
+	"email.auto-expunge",
+	"changes.max-history",
 	"enterprise.license-key",
 ]
 STORE_TYPE_MAP = {
@@ -73,6 +84,49 @@ class MailServerConfig(Document):
 		"""Generates the TOML configuration for the Mail Server."""
 
 		self.config_toml = get_config_toml(self.server)
+
+	@frappe.whitelist()
+	def deploy(self) -> None:
+		"""Deploys the configuration to the Mail Server."""
+
+		frappe.only_for("System Manager")
+
+		values = []
+		for cfg in self.get_password("config_toml").split("\n"):
+			key, value = cfg.split("=", 1)
+			key = key.strip()
+			value = value.strip().strip('"')
+			values.append([key, value])
+
+		data = [
+			{
+				"type": "insert",
+				"prefix": None,
+				"values": values,
+				"assert_empty": False,
+			}
+		]
+		backend_api = get_mail_backend_api("Mail Server", self.server)
+		response = backend_api.request("POST", "/api/settings", data=json.dumps(data))
+		raise_for_status(response)
+
+		if response_json := response.json():
+			if response_json.get("error"):
+				frappe.throw(
+					title=_("Failed to deploy configuration"), msg=json.dumps(response_json, indent=4)
+				)
+			elif response_json.get("data") is None:
+				frappe.msgprint(
+					_("Configuration deployed successfully."),
+					alert=True,
+					indicator="green",
+				)
+			else:
+				frappe.msgprint(
+					_(
+						"Configuration deployed successfully, but the response from the server was unexpected: {response}"
+					).format(response=json.dumps(response_json))
+				)
 
 
 def create_mail_server_config(server: str) -> "MailServerConfig":
@@ -159,24 +213,6 @@ def get_config_toml(server: str) -> str | None:
 			}
 
 		return result
-
-	def _get_seed_nodes(server: str, cluster: str) -> dict:
-		seed_nodes = [
-			s[frappe.scrub(s["cluster_advertise_addr"])]
-			for s in frappe.db.get_all(
-				"Mail Server",
-				filters={"enabled": 1, "cluster": cluster, "name": ["!=", server]},
-				fields=[
-					"private_ipv4",
-					"private_ipv6",
-					"public_ipv4",
-					"public_ipv6",
-					"cluster_advertise_addr",
-				],
-			)
-			if s["cluster_advertise_addr"]
-		]
-		return _format_keys(seed_nodes)
 
 	def _get_local_keys(outbound_only: bool = False) -> dict:
 		local_keys = LOCAL_KEYS + (
@@ -406,12 +442,6 @@ def get_config_toml(server: str) -> str | None:
 		},
 		"cluster": {
 			"node-id": server.cluster_node_id,
-			"bind-addr": server.cluster_bind_addr,
-			"bind-port": cluster.cluster_bind_port,
-			"advertise-addr": server.get(frappe.scrub(server.cluster_advertise_addr)),
-			"key": password_or_none(cluster, "cluster_key"),
-			"heartbeat": _format_value_or_zero(server.cluster_heartbeat, "s"),
-			"seed-nodes": _get_seed_nodes(server.name, cluster.name),
 		},
 		"config": {
 			"local-keys": _get_local_keys(bool(server.outbound_only)),
